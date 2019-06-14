@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Smurf from './Smurf';
 
 class Smurfs extends Component {
+
   render() {
     return (
       <div className="Smurfs">
@@ -16,6 +17,8 @@ class Smurfs extends Component {
                 age={smurf.age}
                 height={smurf.height}
                 key={smurf.id}
+                edit={()=>this.props.edit(smurf)}
+                delete={()=>this.props.delete(smurf)}
               />
             );
           })}

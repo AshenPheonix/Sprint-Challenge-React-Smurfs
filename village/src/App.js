@@ -12,6 +12,10 @@ class App extends Component {
     super(props);
     this.state = {
       smurfs: [],
+      editing:null,
+      name:'',
+      age:'',
+      height:''
     };
   }
 
@@ -23,8 +27,48 @@ class App extends Component {
     })
   }
 
-  addSmurf=smurf=>{
-    axios.post('http://localhost:3333/smurfs',smurf).then(data=>{
+  handleInputChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  addSmurf=e=>{
+    let temp={name:this.state.name,age:this.state.age,height:this.state.height}
+
+    if(this.state.editing){
+      axios.put(`http://localhost:3333/smurfs/${this.state.editing}`,temp).then(data=>{
+        this.setState({editing:null,name:'',age:'',height:'',smurfs:data.data})
+      })
+    }else{
+      axios.post('http://localhost:3333/smurfs',temp).then(data=>{
+        this.setState({
+          smurfs:data.data,
+          name: '',
+          age: '',
+          height: ''
+        })
+      }).catch(err=>console.error(err))
+    }
+  }
+
+  clear=e=>{
+    e.preventDefault();
+    
+    this.setState({editing:null,name:'',age:'',height:''})
+    this.props.history.push('/')
+  }
+
+  edit=e=>{
+    this.setState({
+      editing:e.id,
+      name:e.name,
+      age:e.age,
+      height:e.height      
+    })
+    this.props.history.push('/add')
+  }
+
+  delete=e=>{
+    axios.delete(`http://localhost:3333/smurfs/${e.id}`).then(data=>{
       this.setState({smurfs:data.data})
     })
   }
@@ -37,10 +81,19 @@ class App extends Component {
       <div className="App">
         <Navigation />
         <Route path="/add" render={()=>(
-          <SmurfForm addSmurf={this.addSmurf}/>
+          <SmurfForm 
+            addSmurf={this.addSmurf}
+            {...this.state}
+            handleInputChange={this.handleInputChange}
+            clear={this.clear}
+          />
         )} />
         <Route path="/" exact render={()=>(
-          <Smurfs smurfs={this.state.smurfs} />
+          <Smurfs 
+            smurfs={this.state.smurfs} 
+            edit={this.edit}
+            delete={this.delete}
+          />
         )}/>
       </div>
     );
