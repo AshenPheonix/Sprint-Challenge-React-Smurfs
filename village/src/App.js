@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import './App.css';
 import SmurfForm from './components/SmurfForm';
 import Smurfs from './components/Smurfs';
+import SmurfCapture from './components/SmurfCapture'
 import axios from 'axios'
 import Navigation from './components/Navigation'
 import {Route} from 'react-router-dom'
@@ -95,6 +96,13 @@ class App extends Component {
             delete={this.delete}
           />
         )}/>
+        <Route path="/smurf/:id" render={p=>
+          <SmurfCapture
+            edit={this.edit}
+            delete={this.delete}
+            {...p}
+          />
+        }/>
       </div>
     );
   }
