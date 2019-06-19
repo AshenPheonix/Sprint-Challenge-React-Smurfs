@@ -1,0 +1,15 @@
+nav{
+    display:flex;
+    justify-content: center;
+    margin:1rem auto; 
+}
+nav a{
+    display:inline-block;
+    margin:1rem;
+    padding:.5rem;
+    border:2px gray outset;
+    box-shadow: 2px 2px 2px lightgray;
+}
+nav a.active{
+    background-color:lightblue;
+}
